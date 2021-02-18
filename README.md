@@ -2,8 +2,7 @@ new_elearning
 =============
 
 New Elearning (LMS) dokumenary
-Author : Almazari <almazary@gmail.com> 
-Re-design : Teguh <teguhsaputra01@gmail.com>
+Teguh <teguhsaputra01@gmail.com>
 
 Sebuah aplikasi yang dapat digunakan sebagai media untuk kegiatan belajar dan mengajar disekolah tingkat SMP/SMA/SMK sederajat atau instansi pendidikan lainnya, dan telah digunakan oleh banyak sekolah - sekolah di Indonesia sejak versi 1.0 dibagikan.
 
@@ -29,7 +28,3 @@ Lisensi:
 Kebutuhan:
 - PHP >= 5.5
 - Mysql
-
-Versi terbaru: 2.0
-
-<a href="http://www.dokumenary.net/demo-aplikasi-elearning/">DEMO</a> | <a href="http://dokumenary.net">PORTAL UPDATE</a> | <a href="http://www.dokumenary.net/2015/08/23/new-elearning-versi-1-0/">PANDUAN INSTALL</a>
