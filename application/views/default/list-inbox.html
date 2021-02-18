@@ -1,0 +1,161 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Pesan - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+    <!-- Main content -->
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>List Pesan</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url() }}">Beranda</a></li>
+            <li class="breadcrumb-item active">Pesan</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section> 
+
+{{ get_flashdata('msg')|raw }}   
+
+<section class="content">
+    <div class="row d-flex justify-content-center">
+    <!-- /.col -->
+    <div class="col-lg-9 col-md-10 col-xs-12 p-3">
+        <div class="card card-primary card-outline">
+        <div class="card-header">
+            <a href="{{ site_url('message/create/') }}" class="btn btn-sm btn-primary">Tulis Surat</a>
+            <div class="card-tools">
+                <form class="form-search" method="get" action="{{ site_url('message/index/') }}">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" placeholder="Cari pesan ..." name="q" value="{{ keyword }}">
+                        <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /.card-tools -->
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body p-0">
+            <div class="mailbox-controls">
+            <!-- /.btn-group -->
+            <a href="{{ site_url('message') }}" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></a>
+            <div class="float-right">
+                {{ pagination|raw }}
+            </div>
+            <!-- /.float-right -->
+            </div>
+            <div class="table-responsive mailbox-messages">
+                <table class="table table-hover table-striped message table-message">
+                    <tbody>
+                        {% for d in inbox %}
+                        <tr class="{{ (d.opened == 0) ? 'unread' }} clickable-row" data-href="{{ site_url('message/detail/' ~ d.id ~ '#msg-' ~ d.id)}}">
+                            <td>
+                                <a class="btn btn-default btn-sm" href="{{ site_url('message/detail/' ~ d.id ~ '/?confirm=1#confirm') }}" ><i class="far fa-trash-alt"></i></a>
+                            </td>
+                            <td class="mailbox-name"><a href="{{ d.profil.link_profil }}">{{ character_limiter(d.profil.nama, 23, '...') }}</a>{% if d.receiver is not empty %}<i>
+                            - Kepada : <a href="{{ d.receiver.link_profil }}">{{ d.receiver.nama }}</a></i>{% endif %}</td>
+                            <td class="mailbox-subject">{{ character_limiter(strip_tags(d.content), 80, '...')|raw }}</td>
+                            <td class="mailbox-date">
+                                {% if d.timeago is not empty %}
+                                    <time class="timeago" datetime="{{ d.timeago }}">{{ d.date }}</time>
+                                {% else %}
+                                    <small>{{ d.date }}</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            <!-- /.table -->
+            </div>
+            <!-- /.mail-box-messages -->
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer p-0">
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="{{ site_url('message') }}" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></a>
+                </div>
+            <div class="float-right">
+                {{ pagination|raw }}
+            </div>
+            <!-- /.float-right -->
+            </div>
+        </div>
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!--
+<div class="module message">
+    <div class="module-head">
+        <h3>Pesan</h3>
+    </div>
+    <div class="module-body">
+        <div class="module-option clearfix">
+            {{ get_flashdata('msg')|raw }}
+
+            <div class="pull-right">
+                <form class="form-search" method="get" action="{{ site_url('message/index/') }}">
+                    <div class="input-append">
+                        <input type="text" class="span3 search-query" placeholder="cari pesan..." name="q" value="{{ keyword }}">
+                        <button type="submit" class="btn"><i class="icon-search"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="pull-left">
+                <a href="{{ site_url('message/create/') }}" class="btn btn-primary"><i class="icon-pencil"></i> Tulis pesan</a>
+            </div>
+        </div>
+        <div class="module-body table">
+            <table class="table table-message">
+                <tbody>
+                    {% for d in inbox %}
+                    <tr class="{{ (d.opened == 0) ? 'unread' }} clickable-row" data-href="{{ site_url('message/detail/' ~ d.id ~ '#msg-' ~ d.id)}}">
+                        <td class="cell-author">
+                            <img style="height:30px;width:30px; margin-right: 10px;" class="img-polaroid img-circle pull-left" src="{{ d.profil.link_image }}">
+                            <a href="{{ d.profil.link_profil }}">{{ character_limiter(d.profil.nama, 23, '...') }}</a>
+                            <br>
+                            {% if d.timeago is not empty %}
+                                <time class="timeago" datetime="{{ d.timeago }}">{{ d.date }}</time>
+                            {% else %}
+                                <small>{{ d.date }}</small>
+                            {% endif %}
+                        </td>
+                        <td class="cell-title hidden-phone hidden-tablet">
+                            <a class="pull-right" style="margin-left:10px;" href="{{ site_url('message/detail/' ~ d.id ~ '/?confirm=1#confirm') }}"><i class="icon-trash"></i></a>
+                            {% if d.receiver is not empty %}
+                            <div>To <a href="{{ d.receiver.link_profil }}">{{ d.receiver.nama }}</a></div>
+                            {% endif %}
+                            {{ character_limiter(strip_tags(d.content), 80, '...')|raw }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="module-foot">
+            {{ pagination|raw }}
+        </div>
+
+    </div>
+</div>
+-->
+{% endblock %}

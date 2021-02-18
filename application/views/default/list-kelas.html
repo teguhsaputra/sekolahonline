@@ -1,0 +1,72 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Manajemen Kelas - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>List Kelas</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url() }}">Beranda</a></li>
+            <li class="breadcrumb-item active">List Kelas</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="container">
+    <div class="row-fluid">
+        {{ get_flashdata('kelas')|raw }}
+    
+        {% if is_demo_app() %}
+            {{ get_alert('warning', get_demo_msg())|raw }}
+        {% endif %}
+    
+        <div class="card card-default">
+            <div class="card-header">
+                <h4>Tambah Kelas</h4>
+            </div>
+            <div class="card-body">
+                {{ form_open('kelas', {'class' : 'form-horizontal row-fluid'})|raw }}
+                    <div class="form-group">
+                        <label class="form-label">Nama Kelas <span class="text-error">*</span></label>
+                        <div class="form-input d-flex">
+                            <input type="text" name="nama" class="col-5 form-control mr-2" placeholder="Nama Kelas" value="{{ set_value('nama') }}">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            {{ form_error('nama')|raw }}
+                        </div>
+                    </div>
+                {{ form_close()|raw }}
+            </div>
+            
+            <div class="card-footer">
+                <p><i class="fas fa-info-circle"></i> <b>Note:</b> Kelas tidak dapat dihapus namun dapat diubah menjadi tidak aktif</p>
+            </div>
+        
+        </div>
+    
+        <div class="card card-default">
+            <div class="card-body">
+                {{ kelas_hirarki|raw }}
+            </div>
+            <div class="card-footer">
+                {% if is_demo_app() == false %}
+                    <code id="response_update"></code><br/>
+                    <button class="btn btn-primary" id="update-hirarki">Update Hirarki</button>
+                {% endif %}
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+{% endblock %}

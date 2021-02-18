@@ -1,0 +1,69 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Manajemen Matapelajaran - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Edit Matapelajaran</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('mapel') }}">Manajemen Matapelajaran</a></li>
+            <li class="breadcrumb-item active">Edit Matapelajaran</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 col-md-10 col-xs-12 p-3">
+        <div class="card">
+            <div class="card-body">
+                {{ get_flashdata('mapel')|raw }}
+        
+                {% if is_demo_app() %}
+                    {{ get_alert('warning', get_demo_msg())|raw }}
+                {% endif %}
+        
+                {{ form_open('mapel/edit/' ~ mapel.id ~ '/' ~ enurl_redirect(uri_back), {'class' : 'form-horizontal row-fluid'})|raw }}
+                    <div class="form-group">
+                        <label class="form-label">Nama <span class="text-error">*</span></label>
+                        <div class="form-input">
+                            <input type="text" name="nama" class="col-8 form-control" value="{{ set_value('nama', mapel.nama) }}">
+                            <br>{{ form_error('nama')|raw }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <div class="form-input">
+                            <textarea name="info" class="col-12 form-control" rows="5">{{ set_value('info', mapel.info)|raw }}</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <label class="form-check-label ml-5">
+                            <input  class="form-check-input" type="checkbox" value="1" name="status" {{ set_checkbox('status', '1', (mapel.aktif == 1) ? TRUE : FALSE) }}>
+                            Aktif
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            {% if is_demo_app() == false %}
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            {% endif %}
+                            <a href="{{ uri_back }}" class="btn btn-default">Batal</a>
+                        </div>
+                    </div>
+                {{ form_close()|raw }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

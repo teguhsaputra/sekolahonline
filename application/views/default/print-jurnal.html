@@ -1,0 +1,60 @@
+{% extends 'layout-print.html' %}
+
+{% block title %}
+    Print nilai - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr align="center">
+            <th width="1%"><small class="font-weight-bold">ID</small></th>
+            <th width="13%"><small class="font-weight-bold">Tanggal Buat</small></th>
+            <th width=""><small class="font-weight-bold">Jam Mengajar</small></th>
+            <th width=""><small class="font-weight-bold">Matapelajaran</small></th>
+            <th width=""><small class="font-weight-bold">Kelas</small></th>
+            <th width=""><small class="font-weight-bold">No.KI/KD</small></th>
+            <th width="40%"><small class="font-weight-bold">Pokok Bahasan/Materi Tes Formatif/Suamtif/Sub Suamtif</small></th>
+            <th></th>
+            <!--
+            <th width=""><small class="font-weight-bold">Selesai/Belum</small></th>
+            <th width=""><small class="font-weight-bold">Absensi Siswa</small></th>
+            <th width="40%"><small class="font-weight-bold">Keterangan</small></th>
+            <th width=""><small class="font-weight-bold">Edit</small></th>
+            -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for no, aj in absenjurnal %}
+        <tr>
+            <td><small>{{ aj.id }}</small></td>
+            <td><small>{{ aj.tanggal_buat }}</small></td>
+            <td><small>{{ aj.hari_ngajar }}, {{ aj.jam_ngajar }}</small></td>
+            <td><small>{{ aj.matapelajaran }}</small></td>
+            <td><small>{{ aj.kelas }}</small></td>
+            <td><small>{{ aj.no_kikd }}</small></td>
+            <td><small>{{ aj.pokok_pembahasan }}</small></td>
+            <!--
+            <td><small>{{ aj.status_selesai }}   </small></td>
+            <td><small>{{ aj.ket_absen_siswa }}  </small></td>
+            <td><small>{{ aj.keterangan }}            </small></td>
+            -->
+            <td>
+                <div class="btn-group">
+                    <!-- {{ anchor('absenjurnal/detail/' ~ aj.id, '<i class="fas fa-search"></i> Detail', {'class' : 'btn btn-default btn-sm', 'target' : '_tab'})|raw }} -->
+                    <a href="{{ site_url('absenjurnal/detail') }}/{{ aj.id }}" class="btn btn-default btn-sm"><i class="fas fa-search-plus"></i> Detail</a>
+                    <a href="#" class="btn btn-default btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <tr>
+            
+        </tr>
+    </tr>
+    </tfoot>
+</table>
+{% endblock %}

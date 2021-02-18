@@ -1,0 +1,199 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Tambah Jurnal dan Absen - {{ parent() }} 
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Tambah Absen & Jurnal Mengajar</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('absenjurnal?clear_filter=true') }}">List Absen & Jurnal Mengajar</a></li>
+            <li class="breadcrumb-item active">Tambah Absen & Jurnal Mengajar</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 p-3" id="popLihat">
+    {{ get_flashdata('absenjurnal')|raw }}
+        {{ form_open_multipart('absenjurnal/add', {'class' : 'form-horizontal row-fluid'})|raw }}
+            <div class="card">
+                <div class="card-header">
+                    <nav style="margin-bottom:-13px;">
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Jurnal Mengajar</a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Absen Siswa</a>
+                        </div>
+                    </nav>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                            <div class="col-12">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                    <th colspan="2" class="text-center">Jurnal Mengajar</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                <label>Tanggal Buat <span class="text-danger">*</span></label>
+                                                    <div class="input-group date" id="tanggal_buat" data-target-input="nearest">
+                                                        <input id="tanggal_saiki" type="text" name="tanggal_buat" value="{{ set_value('tanggal_buat') }}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#tanggal_buat"/>
+                                                    </div>
+                                                    <code>{{ form_error('tanggal_buat')|raw }}</code>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {% set retrieve_all_ma = get_row_data('pengajar_model', 'retrieve_all_ma', [null, user_id, null]) %}
+                                                {% if retrieve_all_ma is not empty %}
+                                                <div class="form-group">
+                                                    <label for="jam_mengajar">Jam Mengajar <span class="text-danger">*</span></label>
+                                                    <select name="mapel_ajar_id" class="form-control" id="jam_mengajar">
+                                                    <option value="">--pilih--</option>
+                                                    {% for ma in retrieve_all_ma %}
+                                                    {% set rk = get_row_data('mapel_model','retrieve_kelas', [ma.mapel_kelas_id]) %}
+                                                    {% set mp = get_row_data('mapel_model','retrieve', [rk.mapel_id]) %}
+                                                    {% set k = get_row_data('kelas_model','retrieve', [rk.kelas_id]) %}
+                                                    {% set kelas_id = rk.kelas_id %}
+                                                        <option data-matapelajaran="{{ mp.nama }}" data-kelas="{{ rk.kelas_id }}" value="{{ ma.id }}">
+                                                        {{ arr_hari[ma.hari_id] }} ~ {{ k.nama }} ~ 
+                                                        {{ ma.jam_mulai|date('H:i') }} - {{ ma.jam_selesai|date('H:i') }}</option>
+                                                    {% endfor %}
+                                                    </select>
+                                                </div>
+                                                {% else %}
+                                                <div class="form-group">
+                                                    <label for="jam_mengajar">Jam Mengajar <span class="text-danger">*</span></label>
+                                                    <select name="mapel_ajar_id" class="form-control bg-danger" id="jam_mengajar" disabled>
+                                                        <option value="ma.id">Jam Mengajar Belum Ada</option>
+                                                    </select>
+                                                </div>
+                                                {% endif %}
+                                            </td>
+                                            <code>{{ form_error('mapel_ajar_id')|raw }}</code>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label>Matapelajaran (otomatis) <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" style="background:white;" id="get_ma" disabled>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!--
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label>Kelas (otomatis)</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" style="background:white;" id="get_kelas" disabled>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        -->
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                <label>No.KI/KD <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="no_kikd" value="{{ set_value('no_kikd') }}" class="form-control"/>
+                                                    </div>
+                                                    <code>{{ form_error('no_kikd')|raw }}</code>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                <label>Pokok Bahasan/Materi Tes Formatif/Suamtif/Sub Suamtif <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="pokok_pembahasan" value="{{ set_value('pokok_pembahasan') }}" class="form-control"/>
+                                                    </div>
+                                                    <code>{{ form_error('pokok_pembahasan')|raw }}</code>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <label for="jam_mengajar">Selesai/Belum <span class="text-danger">*</span></label>
+                                                    <select name="status_selesai" class="form-control">
+                                                        <option value="">--pilih--</option>
+                                                        <option value="0">Selesai</option>
+                                                        <option value="1">Belum</option>
+                                                    </select>
+                                                     <code>{{ form_error('status_selesai')|raw }}</code>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                <label>Keterangan</label>
+                                                    <div class="input-group">
+                                                        <input type="text" name="keterangan" value="{{ set_value('keterangan') }}" class="form-control"/>
+                                                        <input type="text" class="form-control" style="background:white;" id="get_kelas" hidden>
+                                                    </div>
+                                                    <code>{{ form_error('keterangan')|raw }}</code>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="col-12" id="refresh">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <th colspan="2" class="text-center">Absen Siswa</th>
+                                    </thead>
+                                    <tbody id="data_siswa">
+                                  
+                                        <!--
+                                        {% set retrieve_all_siswa = get_row_data('absenjurnal_model', 'retrieve_all_siswa', []) %}
+                                        {% if retrieve_all_ma is not empty %}
+                                            {% set rk = get_row_data('mapel_model','retrieve_kelas', [ma.mapel_kelas_id]) %}
+                                            {% set mp = get_row_data('mapel_model','retrieve', [rk.mapel_id]) %}
+                                            {% set k = get_row_data('kelas_model','retrieve', [rk.kelas_id]) %}
+                                                <option data-matapelajaran="{{ mp.nama }}" data-kelas="{{ k.nama }}" value="{{ ma.id }}">
+                                                {{ arr_hari[ma.hari_id] }} ~ {{ k.nama }} ~ 
+                                                {{ ma.jam_mulai|date('H:i') }} - {{ ma.jam_selesai|date('H:i') }}</option>
+                                        {% endif %}
+                                        -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group">
+                        <a href="{{ site_url('absenjurnal') }}" class="btn btn-dark" data-toggle="tooltip" title="Kembali"><i class="fas fa-redo mr-1"></i>Kembali</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

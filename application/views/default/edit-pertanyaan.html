@@ -1,0 +1,41 @@
+{% extends "layout-iframe.html" %}
+
+{% block content %}
+
+{{ get_flashdata('tugas')|raw }}
+<section class="content">    
+    <div class="card card-info">
+        <div class="card-header">
+            <h3 class="card-title p-1">
+                <b>Edit Pertanyaan ke {{ no_pertanyaan }}</b>
+            </h3>
+            <div class="btn-group float-right p-1">
+                <a class="btn btn-warning" href="{{ site_url('tugas/tambah_soal/' ~ tugas.id) }}">Tambah Pertanyaan</a></li>
+                {% if tugas.type_id == 3 %}
+                <a class="btn btn-success" href="{{ site_url('tugas/tambah_pilihan/' ~ tugas.id ~ '/' ~ pertanyaan.id) }}">Tambah Pilihan</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body">
+            {{ form_open('tugas/edit_soal/' ~ tugas.id ~ '/' ~ pertanyaan.id)|raw }}
+            <table class="table" style="margin-top:20px;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <textarea name="pertanyaan" id="pertanyaan" class="texteditor">{{ set_value('pertanyaan', pertanyaan.pertanyaan)|raw }}</textarea>
+                            {{ form_error('pertanyaan')|raw }}
+                        </td>
+                    <tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            {{ form_close()|raw }}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

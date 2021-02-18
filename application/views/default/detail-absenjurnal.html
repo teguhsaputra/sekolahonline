@@ -1,0 +1,169 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Detail Absen dan Jurnal - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Detail Absen & Jurnal Mengajar</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('absenjurnal?clear_filter=true') }}">List Absen & Jurnal Mengajar</a></li>
+            <li class="breadcrumb-item active">Detail Absen & Jurnal Mengajar</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-12 p-3" id="popLihat">
+    {{ get_flashdata('absenjurnal')|raw }}
+        <div class="card card-info">
+            <!-- /.card-header -->
+            <div class="card-body pad">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <th colspan="2" class="text-center">Jurnal Mengajar</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td width="30%" class="text-bold">ID</td>
+                                    <td>{{ aj.id }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Tanggal Buat</td>
+                                    <td>{{ aj.tanggal_buat }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Nama Pengajar</td>
+                                    <td>{{aj.pengajar}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Jam Mengajar</td>
+                                    <td>{{aj.jam_ngajar}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Matapelajaran</td>
+                                    <td>{{ aj.matapelajaran }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Kelas</td>
+                                    <td>{{ aj.kelas }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">No.KI/KD</td>
+                                    <td>{{ aj.no_kikd }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Pokok Bahasan/Materi Tes Formatif/Suamtif/Sub Suamtif</td>
+                                    <td>{{ aj.pokok_pembahasan }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Selesai/Belum</td>
+                                    <td>{{ aj.status_selesai }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Absensi Siswa</td>
+                                    <td>
+                                        {% if hadir is not empty %}
+                                            <span class="badge badge-secondary">Hadir {{ hadir }}</span>
+                                        {% endif %}
+                                        {% if sakit is not empty %}
+                                            <span class="badge badge-secondary">Sakit {{ sakit }}</span>
+                                        {% endif %}
+                                        {% if izin is not empty %}
+                                            <span class="badge badge-secondary">Izin {{ izin }}</span>
+                                        {% endif %}
+                                        {% if alpha is not empty %}
+                                            <span class="badge badge-secondary">Alpha {{ alpha }}</span>
+                                        {% endif %}
+                                    </td>
+                                 <!--   <td>{{ print_r(aj.ket_absen_siswa) }}</td> -->
+                                </tr>
+                                <tr>
+                                    <td class="text-bold">Keterangan</td>
+                                    <td>{{ aj.keterangan }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-6">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <th colspan="2" class="text-center">Absen Siswa</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td width="80%" class="text-bold">Nama Siswa</td>
+                                    <td class="text-bold">Kehadiran</td>
+                                </tr>
+                                {% for no, as in absen_siswa %}
+                                <tr>    
+                                    <td>{{ as.siswa  }}</td>
+                                    {% if as.status_hadir == 0 %}
+                                    <td class="text-center">
+                                        <i class="text-success fas fa-check-circle"></i> Hadir
+                                    </td>
+                                    {% endif %}
+                                    {% if as.status_hadir == 1 %}
+                                    <td class="text-center">
+                                        <i class="text-warning fas fa-plus-circle"></i> Sakit
+                                    </td>
+                                    {% endif %}
+                                    {% if as.status_hadir == 2 %}
+                                    <td class="text-center">
+                                        <i class="text-info fas fa-info-circle"></i> Izin
+                                    </td>
+                                    {% endif %}
+                                    {% if as.status_hadir == 3 %}
+                                    <td class="text-center">
+                                        <i class="text-danger fas fa-times-circle"></i> Alpha
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                                <!--
+                                <tr>
+                                    <td>Teguh Saputra</td>
+                                    <td class="text-center">
+                                        <i class="text-info fas fa-info-circle"></i> Izin
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Jessica</td>
+                                    <td class="text-center">
+                                        <i class="text-warning fas fa-plus-circle"></i> Sakit
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Leonardo</td>
+                                    <td class="text-center">
+                                        <i class="text-danger fas fa-times-circle"></i> Alpha
+                                    </td>
+                                </tr>
+                                -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="{{ site_url('absenjurnal') }}" class="btn btn-dark" data-toggle="tooltip" title="Kembali"><i class="fas fa-redo mr-1"></i>Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

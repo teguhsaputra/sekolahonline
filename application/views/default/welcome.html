@@ -1,0 +1,282 @@
+{% extends "layout-private.html" %}
+
+{% block content %}
+<!-- Main content -->
+    <section class="content">    
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <blockquote>
+                        <i class="fas fa-address-card"></i> {{ tgl_indo(date('Y-m-d')) }}, IP anda: {{ get_ip() }}<br/>
+                        <i class="fas fa-building"></i> Selamat datang di <b>Sekolah Online {{ get_pengaturan('nama-sekolah', 'value') }}</b><br/>
+                        <i class="fas fa-map"></i> Alamat: {{ get_pengaturan('alamat', 'value') }}<br/>
+                        {% if get_pengaturan('telp', 'value') is not empty %}
+                        <i class="fas fa-phone"></i> Telpon: {{ get_pengaturan('telp', 'value') }}
+                        {% endif %}
+                    </blockquote>
+                </div>
+            </div>
+            {% if is_admin() %}
+            {% if count_mapel_kelas == 0 %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><b>Atur data berikut supaya aplikasi sekolah online dapat berjalan dengan baik:</b></h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>
+                                        <a href="{{ site_url('mapel') }}"><b><i class="menu-icon icon-book"></i> Manajemen Matapelajaran</b></a>
+                                    </td>
+                                    <td>
+                                        Input semua Matapelajaran yang ada di sekolah
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ site_url('kelas') }}"><b><i class="menu-icon icon-tasks"></i> Manajemen Kelas</b></a>
+                                    </td>
+                                    <td>
+                                        Input semua Kelas yang ada di sekolah
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ site_url('kelas/mapel_kelas') }}"><b><i class="menu-icon icon-paste"></i> Matapelajaran Kelas</b></a>
+                                    </td>
+                                    <td>
+                                        Atur Matapelajaran pada tiap-tiap Kelas
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ jml_siswa }}</h3>
+                    
+                                <p>Siswa</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person"></i>
+                            </div>
+                            <a href="{{ site_url('siswa/index/1') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ jml_pengajar }}</h3>
+                    
+                                <p>Pengajar</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person"></i>
+                            </div>
+                            <a href="{{ site_url('pengajar/index/1') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ jml_siswa_pending }}</h3>
+                    
+                                <p>Pending Siswa</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person-add"></i>
+                            </div>
+                            <a href="{{ site_url('siswa/index/0') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>{{ jml_pengajar_pending }}</h3>
+                    
+                                <p>Pending Pengajar</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person-add"></i>
+                            </div>
+                            <a href="{{ site_url('pengajar/index/0') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            <h3 class="card-title">Pengumuman</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                {% for p in pengumuman %}
+                                <tr>
+                                    <td>{{ anchor('pengumuman/detail/' ~ p.id, p.judul)|raw }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger">
+                            <h3 class="card-title">Riwayat login pengguna</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="show-last-login-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+    <!-- end section admin -->
+    
+    {% if is_pengajar() %}
+    {% set peraturan = get_pengaturan('peraturan-elearning', 'value') %}
+    <section class="content">    
+        <div class="container-fluid">
+            <div class="row">
+                {% if peraturan is not empty %}
+                <div class="col-12">
+                    <blockquote class="quote-warning">
+                    <b>Peraturan e-learning : </b><br>
+                    {{ peraturan|raw }}
+                    </blockquote>
+                </div>
+                {% endif %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-primary">
+                            <h3 class="card-title">Pengumuman</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                {% for p in pengumuman %}
+                                <tr>
+                                    <td>{{ anchor('pengumuman/detail/' ~ p.id, p.judul)|raw }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger">
+                            <h3 class="card-title">Riwayat login pengguna</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="show-last-login-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <!-- end section pengajar -->
+    
+    {% if is_siswa() %}
+    {% set peraturan = get_pengaturan('peraturan-elearning', 'value') %}
+    <section class="content">    
+        <div class="container-fluid">
+            <div class="row">
+                {% if peraturan is not empty %}
+                <div class="col-12">
+                    <blockquote class="quote-warning">
+                    <b>Peraturan e-learning : </b><br>
+                    {{ peraturan|raw }}
+                    </blockquote>
+                </div>
+                {% endif %}
+            
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header  bg-primary">
+                            <h3 class="card-title">Informasi Ujian Terbaru</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                {% for m in tugas_terbaru %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ site_url('tugas?judul=' ~ urlencode(m.judul)) }}">{{ m.judul }}</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success">
+                            <h3 class="card-title">Materi terbaru</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                {% for m in materi_terbaru %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ site_url('materi/detail/' ~ m.id) }}" target="_tab">{{ m.judul }}</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h3 class="card-title">Pengumuman</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                {% for p in pengumuman %}
+                                <tr>
+                                    <td>{{ anchor('pengumuman/detail/' ~ p.id, p.judul)|raw }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% if (is_siswa() == false) %}
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger">
+                            <h3 class="card-title">Riwayat login pengguna</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="show-last-login-list"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}

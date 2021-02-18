@@ -1,0 +1,100 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Profilku - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Jadwal Matapelajaran</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url() }}">Beranda</a></li>
+            <li class="breadcrumb-item active">Jadwal Matapelajaran</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 col-md-10 col-xs-12 p-3" id="popTambah">
+        <div class="card card-info">
+            <div class="card-header" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+                <h3 class="card-title">
+                    Tanggal : {{ hari_ini }}, {{ tanggal }}
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body pad table-responsive">
+                <table class="table table-responsive">
+                    <tbody>
+                        {% for key, lj in list_jadwal %}
+                        <tr>
+                            <td><b>{{ lj.nama_hari }}</b></td>
+                            <td>
+                                {% if lj.jadwal is not empty %}
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        {% for jd in lj.jadwal %}
+                                        <tr>
+                                            <td width="5%">{{ jd.jam_mulai|date('H:i') }}</td>
+                                            <td width="2%">-</td>
+                                            <td width="5%">{{ jd.jam_selesai|date('H:i') }}</td>
+                                            <td width="30%">{{ jd.mapel.nama }}</td>
+                                            <td>Pengajar : {{ anchor(jd.pengajar.link_profil, jd.pengajar.nama)|raw }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Jadwal Matapelajaran</strong>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <tbody>
+                {% for key, lj in list_jadwal %}
+                <tr>
+                    <td {{ (key == 1) ? 'style="border-top: 0px;"' }} width="15%"><b>{{ lj.nama_hari }}</b></td>
+                    <td {{ (key == 1) ? 'style="border-top: 0px;"' }}>
+                        {% if lj.jadwal is not empty %}
+                        <table class="table table-condensed">
+                            <tbody>
+                                {% for jd in lj.jadwal %}
+                                <tr class="success">
+                                    <td width="5%">{{ jd.jam_mulai|date('H:i') }}</td>
+                                    <td width="2%">-</td>
+                                    <td width="5%">{{ jd.jam_selesai|date('H:i') }}</td>
+                                    <td width="30%">{{ jd.mapel.nama }}</td>
+                                    <td>Pengajar : {{ anchor(jd.pengajar.link_profil, jd.pengajar.nama)|raw }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+-->
+{% endblock %}

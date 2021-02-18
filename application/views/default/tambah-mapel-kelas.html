@@ -1,0 +1,111 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Matapelajaran Kelas - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Atur Matapelajaran</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ uri_back }}">Matapelajaran Kelas</a></li>
+            <li class="breadcrumb-item active">Atur Matapelajaran</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 col-md-8 col-xs-12 p-3">
+        <div class="card">
+            <div class="card-body">
+                {{ get_flashdata('mapel')|raw }}
+        
+                {% if is_demo_app() %}
+                    {{ get_alert('warning', get_demo_msg())|raw }}
+                {% endif %}
+        
+                    <div class="col-6">
+                        Pilih Matapelajaran yang ingin dimasukkan pada <b>{{ kelas['nama'] }}</b><br/>
+                        <b><a class="btn btn-default mt-2" data-toggle="collapse" data-target="#form-add-mapel"><i class="fas fa-plus"></i> Tambah Matapelajaran</a></b>
+                    </div>
+                    
+                    <div id="form-add-mapel" {% if post_mapel == 0 %} class="collapse" {% endif %}>
+                        {% if is_demo_app() == false %}
+                        {{ form_open('kelas/mapel_kelas/add/' ~ parent['id'] ~ '/' ~ kelas['id'] ~ '/' ~ enurl_redirect(uri_back), {'class' : 'form-horizontal row-fluid', 'style' : 'margin-top:20px;'})|raw }}
+                        {% endif %}
+                            <input type="hidden" name="add-mapel" value="1">
+                            <div class="form-group">
+                                <label class="form-label">Nama <span class="text-error">*</span></label>
+                                <div class="form-input">
+                                    <input type="text" name="nama" class="col-12 form-control" value="{{ set_value('nama') }}">
+                                    <br>{{ form_error('nama')|raw }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Deskripsi</label>
+                                <div class="form-input">
+                                    <textarea name="info" class="col-12 form-control" rows="5">{{ set_value('info')|raw }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-input">
+                                    {% if is_demo_app() == false %}
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% if is_demo_app() == false %}
+                        {{ form_close()|raw }}
+                        {% endif %}
+                    </div>
+                <br>
+        
+                {% if is_demo_app() == false %}
+                {{ form_open('kelas/mapel_kelas/add/' ~ parent['id'] ~ '/' ~ kelas['id'] ~ '/' ~ enurl_redirect(uri_back)) | raw }}
+                {% endif %}
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label><input type="checkbox" class="checkAll" style="margin-top:-3px;margin-right:5px;"/> Pilih semua</label>
+                            </td>
+                        </tr>
+                        {% for m in mapels %}
+                        {% set checked = get_row_data('mapel_model', 'retrieve_kelas', [null, kelas['id'], m.id]) %}
+                        <tr>
+                            <td>
+                                <label><input class="checkbox-mapel" type="checkbox" name="mapel[]" value="{{ m.id }}" style="margin-top:-2px;margin-right:5px;" {{ (m.aktif != 1) ? 'disabled' : '' }} {{ (checked is empty or checked.aktif == 0) ? '' : 'checked' }}> <b>{{ m.nama }}</b></label>
+                                <small>{{ m.info|nl2br }}</small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>
+                                <label><input type="checkbox" class="checkAll" style="margin-top:-3px;margin-right:5px;"/> Pilih semua</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                {% if is_demo_app() == false %}
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                {% endif %}
+                <a href="{{ uri_back }}" class="btn btn-default">Kembali</a>
+        
+                {% if is_demo_app() == false %}
+                {{ form_close()|raw }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

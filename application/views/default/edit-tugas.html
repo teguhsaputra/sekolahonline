@@ -1,0 +1,172 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Edit Tugas {{ type_label }} - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Platform Sekolah Online</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('tugas') }}">Tugas</a></li>
+            <li class="breadcrumb-item active">Edit Tugas</li>
+        </ol>
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+{{ get_flashdata('tugas')|raw }}
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 col-md-10 col-xs-12 p-3">
+        <div class="card card-info">
+            <div class="card-header" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+                <h3 class="card-title">
+                    Edit Tugas
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            
+            {{ form_open_multipart('tugas/edit/' ~ tugas.id ~ '/' ~ enurl_redirect(uri_back), {'class' : 'form-horizontal row-fluid'})|raw }}
+            <div class="card-body pad">
+                <div class="form-group">
+                    <label>Tanggal Ujian <span class="text-danger">*</span></label>
+                    <div class="input-group date" id="tanggal_ujian" data-target-input="nearest">
+                        <input type="text" name="tanggal_ujian" value="{{ set_value('tanggal_ujian',tanggal_ujian) }}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#tanggal_ujian"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Judul</label>
+                    <div class="input-group">
+                        <input type="text" name="judul" class="form-control" value="{{ set_value('judul', tugas.judul) }}" />
+                    </div>
+                    <code>{{ form_error('judul')|raw }}</code>
+                </div>
+                <div class="form-group">
+                <label>Matapelajaran</label>
+                    <div class="input-group">
+                        <select class="form-control" name="mapel_id">
+                            <option value="">--pilih--</option>
+                            {% for m in mapel %}
+                            <option value="{{ m.id }}" {{ set_select('mapel_id', m.id, (m.id == tugas.mapel_id) ? true) }}>{{ m.nama }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <code>{{ form_error('mapel_id')|raw }}</code>
+                </div>
+                <div class="form-group">
+                    <label>Kelas</label>
+                    <div class="input-group">
+                        {% for k in kelas %}
+                            <label class="form-check-label ml-4 mr-3">
+                                <input class="form-check-input" type="checkbox" name="kelas_id[]" value="{{ k.id }}" {{ set_checkbox('kelas_id[]', k.id, (in_array(k.id, tugas_kelas)) ? true) }}> {{ k.nama }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <code>{{ form_error('kelas_id[]')|raw }}</code>
+                </div>
+                <div class="form-group">
+                    <label>Info</label>
+                    <div class="input-group">
+                         <textarea name="info" id="info" class="texteditor">{{ set_value('info', tugas.info)|raw }}</textarea>
+                    </div>
+                    <code>{{ form_error('info')|raw }}</code>
+                </div>
+                {% if type != 1 %}
+                <div class="form-group">
+                    <label>Durasi</label>
+                    <div class="input-group">
+                        <input type="text" name="durasi" class="form-control" value="{{ set_value('durasi', tugas.durasi) }}" placeholder="Dalam menit *contoh : 30 , 60, 120"/>
+                    </div>
+                    <code>{{ form_error('durasi')|raw }}</code>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <a href="{{ uri_back }}" class="btn btn-default">Kembali</a>
+            </div>
+            {{ form_close()|raw }}
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="module">
+    <div class="module-head">
+        <h3>{{ anchor(uri_back, 'Tugas')|raw }} / Edit Tugas {{ type_label }}</h3>
+    </div>
+    <div class="module-body">
+        {{ get_flashdata('tugas')|raw }}
+
+        {{ form_open_multipart('tugas/edit/' ~ tugas.id ~ '/' ~ enurl_redirect(uri_back), {'class' : 'form-horizontal row-fluid'})|raw }}
+            <div class="control-group">
+                <label class="control-label">Judul <span class="text-error">*</span></label>
+                <div class="controls">
+                    <input type="text" name="judul" class="span12" value="{{ set_value('judul', tugas.judul) }}">
+                    <br>{{ form_error('judul')|raw }}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Matapelajaran <span class="text-error">*</span></label>
+                <div class="controls">
+                    <select name="mapel_id">
+                        <option value="">--pilih--</option>
+                        {% for m in mapel %}
+                        <option value="{{ m.id }}" {{ set_select('mapel_id', m.id, (m.id == tugas.mapel_id) ? true) }}>{{ m.nama }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>{{ form_error('mapel_id')|raw }}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Kelas <span class="text-error">*</span></label>
+                <div class="controls">
+                    <ul class="unstyled inline" style="margin-left: -5px;">
+                        {% for k in kelas %}
+                        <li>
+                            <label class="checkbox inline">
+                                <input type="checkbox" name="kelas_id[]" value="{{ k.id }}" {{ set_checkbox('kelas_id[]', k.id, (in_array(k.id, tugas_kelas)) ? true) }}> {{ k.nama }}
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {{ form_error('kelas_id[]')|raw }}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Info</label>
+                <div class="controls">
+                    <textarea name="info" id="info" class="texteditor">{{ set_value('info', tugas.info)|raw }}</textarea>
+                    {{ form_error('info')|raw }}
+                </div>
+            </div>
+            {% if tugas.type_id != 1 %}
+            <div class="control-group">
+                <label class="control-label">Durasi <span class="text-error">*</span></label>
+                <div class="controls">
+                    <input type="text" name="durasi" class="span2" value="{{ set_value('durasi', tugas.durasi) }}" placeholder="Dalam menit">
+                    <br>{{ form_error('durasi')|raw }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="{{ uri_back }}" class="btn btn-default">Kembali</a>
+                </div>
+            </div>
+        {{ form_close()|raw }}
+
+    </div>
+</div>
+-->
+
+{% endblock %}

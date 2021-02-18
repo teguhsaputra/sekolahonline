@@ -1,0 +1,78 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Edit Email Template - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Edit Email Template</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('email') }}">Email Template</a></li>
+            <li class="breadcrumb-item active">Edit Email Template</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 col-md-10 col-xs-12 p-3">
+        <div class="card">
+            {{ form_open('email/edit/' ~ template.id, {'class' : 'form-horizontal row-fluid'})|raw }}
+            <div class="card-body">
+                {{ get_flashdata('email')|raw }}
+        
+                {% if is_demo_app() %}
+                    {{ get_alert('warning', get_demo_msg())|raw }}
+                {% endif %}
+        
+                {{ get_alert('success', 'Ubah bentuk atau kata - kata template email selain {$...}')|raw }}
+                <div class="form-group">
+                    <label class="form-label">ID</label>
+                    <div class="form-input">
+                        <p style="margin-top:5px;">{{ template.id }}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nama</label>
+                    <div class="form-input">
+                        <p style="margin-top:5px;">{{ template.nama }}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <div class="form-input">
+                        <input type="text" name="subject" class="col-12 form-control" value="{{ set_value('subject', template.subject) }}">
+                        <br>{{ form_error('subject')|raw }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Body</label>
+                    <div class="form-input">
+                        <textarea name="body" id="body" class="texteditor">{{ set_value('body', template.body)|raw }}</textarea>
+                        {{ form_error('body')|raw }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">  
+                <div class="form-group">
+                    <div class="btn-group">
+                        {% if is_demo_app() == false %}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        {% endif %}
+                        <a href="{{ site_url('email') }}" class="btn btn-default">Kembali</a>
+                    </div>
+                </div>
+            </div>
+            {{ form_close()|raw }}
+        </div>
+    </div>
+</div>
+{% endblock %}

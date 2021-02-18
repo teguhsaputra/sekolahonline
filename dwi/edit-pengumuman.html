@@ -1,0 +1,85 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Edit Pengumuman - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Edit Pengumuman</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('pengumuman') }}">Pengumuman</a></li>
+            <li class="breadcrumb-item active">Edit Pengumuman</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+{{ get_flashdata('pengumuman')|raw }}
+<div class="d-flex justify-content-center">
+    <div class="col-lg-6 col-md-6 col-xs-12 p-3" id="popTambah">
+        <div class="card card-info">
+            <div class="card-header" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+                <h3 class="card-title">
+                    Edit Pengumuman
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            {{ form_open_multipart('pengumuman/edit/' ~ p.id, {'class' : 'form-horizontal row-fluid'})|raw }}
+                <div class="card-body pad">
+                    <div class="form-group">
+                        <label>Judul</label>
+                        <div class="input-group">
+                            <input type="text" name="judul" class="form-control" value="{{ set_value('judul', p.judul) }}">
+                            
+                        </div>
+                        <code>{{ form_error('judul')|raw }}</code>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Tampil</label>
+                        <div class="input-group">
+                            <input type="text" name="tgl_tampil" class="form-control" value="{{ set_value('tgl_tampil', arr_tgl) }}" id="pengumuman-tgl-tampil">
+                        </div>
+                        <code>{{ form_error('tgl_tampil')|raw }}</code>
+                    </div>
+                    <div class="form-group">
+                    <label>Info</label>
+                        <div class="input-group">
+                            <textarea name="konten" class="texteditor">{{ set_value('konten', p.konten)|raw }}</textarea>
+                        </div>
+                        <code>{{ form_error('konten')|raw }}</code>
+                    </div>
+                    <div class="form-group">
+                        <label>Tampil di Siswa</label>
+                        <div class="form-check">
+                            <label class="form-check-label inline"><input class="form-check-input" type="radio" name="tampil_siswa" value="1" {{ set_radio('tampil_siswa', '1', (p.tampil_siswa == 1) ? true) }}> Ya</label>
+                            <label class="form-check-label inline ml-5"><input class="form-check-input" type="radio" name="tampil_siswa" value="0" {{ set_radio('tampil_siswa', '0', (p.tampil_siswa == 0) ? true) }}> Tidak</label>
+                        </div>
+                        <code>{{ form_error('tampil_siswa')|raw }}</code>
+                    </div>
+                    <div class="form-group">
+                        <label>Tampil di Pengajar</label>
+                        <div class="form-check">
+                            <label class="form-check-label inline"><input class="form-check-input" type="radio" name="tampil_pengajar" value="1" {{ set_radio('tampil_pengajar', '1', (p.tampil_pengajar == 1) ? true) }}> Ya</label>
+                            <label class="form-check-label inline ml-5"><input class="form-check-input" type="radio" name="tampil_pengajar" value="0" {{ set_radio('tampil_pengajar', '0', (p.tampil_pengajar == 0) ? true) }}> Tidak</label>
+                        </div>
+                        <code>{{ form_error('tampil_pengajar')|raw }}</code>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-info">Simpan</button>
+                    <a href="{{ site_url('pengumuman') }}" class="btn btn-default">Kembali</a>
+                </div>
+            {{ form_close()|raw }}
+        
+        </div>
+    </div>
+</div>
+{% endblock %}

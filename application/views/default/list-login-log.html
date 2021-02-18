@@ -1,0 +1,85 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Login log - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Login Log</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            {% if is_admin() %}
+                <li class="breadcumb-item">{{ anchor('siswa/index/' ~ status_id, 'List Siswa')|raw }} / Login Log</a></li>
+            {% else %}
+                <li class="breadcumb-item">{{ anchor('siswa/filter', 'Filter Siswa')|raw }} / Login Log</a></li>
+            {% endif %}
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+    <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header text-light" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+                    <h3 class="card-title">Username : {{ nama|raw }}</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="TablePengumuman" class="table table-bordered">
+                        <thead>
+                            <th>Tanggal</th>
+                            <th>IP</th>
+                            <th>Agent</th>
+                        </thead>
+                        <tbody>
+                            {% for l in log %}
+                            {% set a = json_decode(l.agent, 1) %}
+                            <tr>
+                                <td>
+                                {% if l.timeago is not empty %}
+                                    <time class="timeago" datetime="{{ l.timeago }}">{{ l.lasttime }}</time>
+                                {% else %}
+                                    {{ l.lasttime }}
+                                {% endif %}
+                                </td>
+                                <td>{{ a.ip }}</td>
+                                <td>{{ a.agent_string }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>IP</th>
+                            <th>Agent</th>
+                        </tr>
+                        </tfoot>
+                        </table>
+                    </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        {{ pagination|raw }}
+                    </div>
+                    {{ form_close()|raw }}
+                </div>
+                <!-- /.card -->
+            </div>
+        <!-- /.row (main row) -->
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Edit Presensi Kehadiran Guru - {{ parent() }} 
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Edit Presensi Kehadiran Guru</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('presensikehadiran?clear_filter=true') }}">List Presensi Kehadiran Guru</a></li>
+            <li class="breadcrumb-item active">Edit Presensi Kehadiran Guru</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 p-3" id="popLihat">
+    {{ get_flashdata('presensikehadiran')|raw }}
+    {{ form_open_multipart('presensikehadiran/edit/' ~ presensikehadiran_id ~ '/' ~ enurl_redirect(uri_back), {'id' : 'edit-presensikehadiran'})|raw }}
+            <div class="card card-info">
+                <div class="card-header" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+                    <h3 class="card-title">
+                        Presensi Kehadiran Guru
+                    </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="col-sm-12">
+
+                        <div class="form-group">
+                            <label>Tanggal Buat <span class="text-danger">*</span></label>
+                                <div class="input-group date" id="tanggal_buat" data-target-input="nearest">
+                                    <input type="text" id="input_tanggal_buat" name="tanggal_buat" value="{{ set_value('tanggal_buat',tanggal_buat) }}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#tanggal_buat" disabled />
+                                </div>
+                                <!-- <code>{{ form_error('get_tanggal_buat')|raw }}</code> -->
+                        </div>
+                        <div class="form-group">
+                            <label>Mengajar Kelas <span class="text-danger">*</span></label>
+                            <div class="select2-blue">
+                                <select name="mengajar_kelas[]" id="select2" multiple="multiple" class="form-control" data-placeholder="--Pilih--">
+                                    {% set retrieve_all_child = get_row_data('kelas_model','retrieve_all_child') %}
+                                    {% set mk = mk in mengajar_kelas %}
+                                    {% for key, rk in retrieve_all_child %}
+                                        <option value="{{ rk.nama }}" {{ set_select('mengajar_kelas[]', rk.nama, (in_array(rk.nama, mengajar_kelas)) ? true) }}>{{ rk.nama }}</option>
+                                    {% endfor %}
+                                </select>
+                                <code>{{ form_error('mengajar_kelas')|raw }}</code>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Jam Infal </label>
+                                <select name="lama_waktu_infal" class="form-control" data-placeholder="--Pilih--">
+                                    {% for i in range(1,12) %}
+                                        <option value="{{ i }}" {{ set_select('lama_waktu_infal', i, ( i == lama_waktu_infal) ? true) }}>{{ i }} Jam</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Infal Kelas </label>
+                            <div class="input-group">
+                                <input name="infal_kelas" type="text" class="form-control" value="{{ set_value('infal_kelas',infal_kelas) }}" style="background:white;">
+                            </div>
+                        </div>
+                    </div>                 
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group">
+                        <a href="{{ site_url('presensikehadiran') }}" class="btn btn-default" data-toggle="tooltip" title="Kembali"><i class="fas fa-redo mr-1"></i>Kembali</a>
+                        <button type="submit" class="btn btn-info">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

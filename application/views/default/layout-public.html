@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    {% include 'layout-header.html' %}
+    {% block css %}{% endblock %}
+</head>
+
+<body class="hold-transition login-page">
+    
+            {% block content %}{% endblock %}
+
+<!-- -->
+    
+<div class="footer" style="z-index: 900;">
+    <div class="container">
+        <center class="text-light">
+            <b class="copyright">{{ copyright|raw }} </b> All rights reserved.<br>
+            {{ version|raw }} | Page loaded in {{ elapsed_time }} seconds.
+        </center>
+    </div>
+</div>
+
+    {% include 'layout-footer.html' %}
+    {% block js %}{% endblock %}
+
+</body>
+</html>

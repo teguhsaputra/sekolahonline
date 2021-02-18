@@ -1,0 +1,113 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Tulis pesan - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Tulis Surat</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('message') }}">Pesan</a></li>
+            <li class="breadcrumb-item active">Tulis Surat</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+{{ get_flashdata('msg')|raw }}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <!-- /.col -->
+        <div class="col-lg-8 col-md-10 col-xs-12 p-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header text-light" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+            <h3 class="card-title">Tulis Surat Baru</h3>
+            </div>
+            <!-- /.card-header -->
+            {{ form_open_multipart('message/create/' ~ ((login is not empty) ? login.id))|raw }}
+            <div class="card-body">
+                <div class="form-group">
+                    {% if login is empty %}
+                        <input type="text" class="form-control tt-query" name="penerima" id="psn-penerima" placeholder="Nama atau email" autocomplete="off" spellcheck="false" value="{{ set_value('penerima')|raw }}">
+                        <br>{{ form_error('penerima')|raw }}
+                    {% else %}
+                        <div style="margin-top: 5px;"><b>{{ login.profil.nama }} </b> [{{ login.username }}]</div>
+                        <input type="hidden" name="penerima" value="{{ login.profil.nama }} [{{ login.username }}]">
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <textarea name="content" id="content" class="form-control" style="height: 300px"></textarea><br/>
+                    {{ form_error('content')|raw }}
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+            <div class="float-right">
+                <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i> Kirim</button>
+            </div>
+            <a href="{{ site_url('message') }}" class="btn btn-default"><i class="fas fa-times"></i> Kembali</a>
+            </div>
+            <!-- /.card-footer -->
+            {{ form_close()|raw }}
+        </div>
+        <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<!--
+<div class="module">
+    <div class="module-head">
+        <h3>{{ anchor('message', 'Pesan')|raw }} / Tulis</h3>
+    </div>
+    <div class="module-body">
+        {{ get_flashdata('msg')|raw }}
+
+        {{ form_open_multipart('message/create/' ~ ((login is not empty) ? login.id), {'class' : 'form-horizontal row-fluid'})|raw }}
+            <div class="control-group">
+                <label class="control-label">Penerima <span class="text-error">*</span></label>
+                <div class="controls">
+                    {% if login is empty %}
+                        <input type="text" name="penerima" id="msg-penerima" data-role="tagsinput" placeholder="Nama atau email" value="{{ set_value('penerima')|raw }}">
+                        <br>{{ form_error('penerima')|raw }}
+                    {% else %}
+                        <div style="margin-top: 5px;"><b>{{ login.profil.nama }} </b> [{{ login.username }}]</div>
+                        <input type="hidden" name="penerima" value="{{ login.profil.nama }} [{{ login.username }}]">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Isi Pesan <span class="text-error">*</span></label>
+                <div class="controls">
+                    <textarea name="content" id="content" class="texteditor">{{ set_value('content')|raw }}</textarea>
+                    {{ form_error('content')|raw }}
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                    <a href="{{ site_url('message') }}" class="btn btn-default">Batal</a>
+                </div>
+            </div>
+        {{ form_close()|raw }}
+
+    </div>
+</div>
+-->
+{% endblock %}

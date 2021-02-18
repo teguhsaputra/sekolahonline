@@ -1,0 +1,93 @@
+{% extends "layout-private.html" %}
+
+{% block title %}
+Data Siswa - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Import Excel</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('siswa') }}">List Siswa</a></li>
+            <li class="breadcrumb-item active">Import Excel</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-8 col-md-8 col-xs-12 p-3" id="popTambah">
+    {{ get_flashdata('siswa')|raw }}
+		<div class="card m-3">
+			<div class="card-body">
+				<b>Contoh format data excel :</b>
+                <div class="table-responsive">
+                    <img src="{{ base_url('plugins/src/import_export_siswa/img/contoh-import-excel-siswa.jpg') }}" class="img img-polaroid">
+				</div>
+                <p>Data siswa mulai terbaca mulai baris kedua, baris pertama digunakan untuk judul.</p>
+				Format field :
+				<ul>
+					<li><b>Jenis kelamin</b> : L (laki-laki) dan P (Perempuan)</li>
+					<li><b>Tgl Lahir</b> : Tanggal/Bulan/Tahun</li>
+					<li><b>Agama</b> : Islam, Kristen, Katolik, Hindu, Budha</li>
+				</ul>
+		
+				{{ form_open_multipart('siswa/import_siswa', {'class' : 'form-horizontal row-fluid'})|raw }}
+					<div class="form-group">
+						<label>Kelas</label>
+						<div class="form-group">
+							<select class="form-control col-6" name="kelas_id">
+                                <option value="">--Pilih--</option>
+								{% for k in kelas %}
+									<option value="{{ k.id }}" {{ set_select('kelas_id', k.id) }}>{{ k.nama }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<code>{{ form_error('kelas_id')|raw }}</code>
+					</div>
+					<!--
+					<div class="form-group">
+						<label class="form-label">Domain username <span class="text-error">*</span></label>
+						<div class="form-input">
+							<input type="text" class="form-control col-6" id="default_username" name="default_username" placeholder="Contoh : sekolah.sch.id">
+							<div>Berfungsi untuk membuat username untuk siswa berdasarkan NIS, misalkan NIS siswa 123 dan domain username adalah sekolah.sch.id, maka username untuk siswa tersebut adalah 123@sekolah.sch.id</div>
+						</div>
+						<code>{{ form_error('default_username')|raw }}</code>
+					</div>
+					-->
+					<!--
+					<div class="form-group">
+						<label class="form-label">Default password</label>
+						<div class="form-input">
+							<p style="margin-top: 5px;">Password akan diambil dari tanggal lahir siswa</p>
+						</div>
+					</div>
+				-->
+					<div class="form-group">
+						<label class="form-label">File Excel (xls) <span class="text-error">*</span></label>
+						<div class="form-input">
+							<input type="file" class="btn btn-default" name="userfile">
+						</div>
+						<code>{{ (error_upload is not empty) ? error_upload|raw }}</code>
+						<code>{{ form_error('userfile')|raw }}</code>
+					</div>
+					<div class="form-group">
+						<div class="form-input">
+							<button type="submit" class="btn btn-primary">Import</button>
+							<a class="btn btn-default" href="{{ site_url('siswa') }}">Kembali</a>
+						</div>
+					</div>
+				</form>
+		
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

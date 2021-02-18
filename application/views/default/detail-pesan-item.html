@@ -1,0 +1,12 @@
+<li class="chat-left" id="msg-{{ item_msg.id }}">
+    <div class="chat-avatar">
+        <img src="{{ item_msg.profil.link_image }}" alt="{{ character_limiter(item_msg.profil.nama, 23, '...') }}">
+        <div class="chat-name">{{ character_limiter(item_msg.profil.nama, 23, '...') }}</div>
+    </div>
+    <div class="chat-text">{{ item_msg.content|raw }}</div>
+    {% if item_msg.timeago is not empty %}
+        <time class="timeago chat-hour" datetime="{{ item_msg.timeago }}">{{ item_msg.date }}</time><!-- <span class="fas fa-trash" onclick="return confirm('Anda yakin ingin menghapus?'),window.location.href='{{ site_url('message/del/' ~ item_msg.id ~ '/' ~ active_msg_id) }}' "></span> -->
+    {% else %}
+        <small class="chat-hour">{{ item_msg.date }}</small><!-- <span class="fas fa-trash" onclick="return confirm('Anda yakin ingin menghapus?'),window.location.href='{{ site_url('message/del/' ~ item_msg.id ~ '/' ~ active_msg_id) }}' "></span> -->
+    {% endif %}
+</li>

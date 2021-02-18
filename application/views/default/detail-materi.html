@@ -1,0 +1,149 @@
+{% extends "layout-detail-materi.html" %}
+
+{% block title %}
+{{ materi.judul }} - {{ parent() }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+    <div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+        <h1>Detail Materi</h1>
+        </div>
+        <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ site_url('materi?clear_filter=true') }}">List Materi</a></li>
+            <li class="breadcrumb-item active">Detail Materi</li>
+        </ol>
+        </div>
+    </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+<div class="d-flex justify-content-center">
+    <div class="col-lg-10 col-md-10 col-xs-12 p-3" id="popLihat">
+    {{ get_flashdata('materi')|raw }}
+        <div class="card card-info">
+            <div class="card-header" style="background-color: #0beef9;background-image: linear-gradient(315deg, #0beef9 0%, #48a9fe 74%);">
+            <h3 class="card-title">
+                Lihat Materi
+            </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body pad">
+                <div class="col-12">
+                    <h3>{{ materi.judul }}</h3>
+                    {% if error is not defined %}
+                        <p>
+                            <span class="badge badge-secondary">{{ materi.mapel.nama }}</span>
+                            
+                            {% for mk in materi.materi_kelas %}
+                                <span class="badge badge-secondary">{{ mk.nama }}</span>
+                            {% endfor %}
+            
+                            <span class="badge badge-secondary">{{ tgl_jam_indo(materi.tgl_posting) }}</span>
+                            
+                            <span class="badge badge-secondary">{{ (type == 'tertulis') ? 'Dibaca' : 'Diunduh' }} {{ materi.views }} Kali</span>
+                            
+                            <span class="badge badge-secondary">{{ materi.jml_komentar }} Komentar</span> 
+                            
+                            <span class="badge badge-secondary">Diposting oleh : {{ materi.pembuat.nama }}</span>
+                        </p>
+                    {% endif %}
+                </div>
+                {% if error is not defined %}
+                <div class="col-12 p-3" style="background-color: #f8f9d2;background-image: linear-gradient(315deg, #f8f9d2 0%, #e8dbfc 74%);">
+                    {% if type == 'tertulis' %}
+                        {{ materi.konten|raw }}
+                    {% elseif type == 'file' %}
+                        <div class="table-responsive">
+                            <table class="table bg-light table-bordered">
+                                <thead>
+                                    <th>Name</th>
+                                    <th>Size</th>
+                                    <th>Modified</th>
+                                    <th>Mime</th>
+                                    <th>Download</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ (materi.file_info.name is empty) ? 'noname' : materi.file_info.name }}</td>
+                                        <td>{{ byte_format(materi.file_info.size) }}</td>
+                                        <td>{{ tgl_jam_indo(mdate('%Y-%m-%d %H:%i:%s', materifile_info.date)) }}</td>
+                                        <td>{{ materi.file_info.mime }}</td>
+                                        <td><a href="{{ materi.download_link }}" class="btn btn-warning"><i class="fas fa-download"></i> Download File</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h5 class="mt-4">
+                            <i class="fas fa-pen"></i> Tulis komentar
+                            <div class="float-right" style="font-size: 14px;">{{ form_error('komentar')|raw }}</div>
+                        </h5>
+                        <div class="bg-form-komentar" id="form-komentar">
+                            <form method="post" action="{{ site_url('materi/detail/' ~ materi.id) }}">
+                                <p><textarea class="col-12 form-control" id="komentar" name="komentar">{{ set_value('komentar')|raw }}</textarea></p>
+                                <p>
+                                    <button class="btn btn-primary float-right">Post komentar</button>
+                                    <img src="{{ get_url_image_session(get_sess_data('user', 'foto'), 'medium', get_sess_data('user', 'jenis_kelamin')) }}" style="height:30px;width:30px; margin-right:5px;" class="img-circle img-thumbnail">
+                                    {{ get_sess_data('user', 'nama') }}
+                                </p>
+                                <div class="clear"></div>
+                            </form>
+                        </div>
+                        <br>
+        
+                        {% if materi.jml_komentar > 0 %}
+                            <h4><i class="icon-comments"></i> {{ materi.jml_komentar }} Komentar</h4>
+        
+                            {% for k in materi.komentar %}
+                            <div class="komentar" id="komentar-{{ k.id }}">
+                                <img src="{{ k.login.link_image }}" style="height:30px;width:30px; margin-left:5px;" class="img-circle img-thumbnail float-right">
+                                <p><a href="{{ k.login.link_profil }}"><b>{{ k.login.nama }}</b></a>, <small>{{ k.tgl_posting|date('d F Y') }}</small>, <small><a href="{{ site_url('materi/detail/' ~ materi.id ~ '/laporkan/' ~ k.id) }}" class="text-muted iframe-laporkan"><i class="icon-bug"></i> laporkan</a></small></p>
+                                {{ k.konten|raw }}
+                            </div>
+                            {% endfor %}
+        
+                            <div style="font-size:12px;">
+                            {{ materi.komentar_pagination|raw }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4">
+                        <h5 class="mt-4"><i class="fas fa-file"></i> Materi lainnya</h5>
+                        <ul class="list-group">
+                            {% for t in terkait %}
+                            <li class="list-group-item">
+                                <a href="{{ site_url('materi/detail/' ~ t.id) }}"><i class="{{ (t.file is empty) ? 'fas fa-file' : 'fas fa-download' }} img-thumbnail mr-1 {{ (strlen(t.judul) > 33) ? 'float-left' }}"></i> {{ t.judul|raw }}</a>
+                            </li>
+                            {% endfor %}
+        
+                            {% if terkait is empty %}
+                            <div class="alert alert-info">Tidak ada materi terkait</div>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="alert alert-danger">
+                        <h3>{{ error }}</h3>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <button onclick="window.close();" class="btn btn-dark" data-toggle="tooltip" title="Kembali"><i class="fas fa-redo mr-1"></i>Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
