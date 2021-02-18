@@ -1,7 +1,5 @@
-new_elearning
+Sekolah Online
 =============
-
-New Elearning (LMS) dokumenary
 
 Teguh <teguhsaputra01@gmail.com>
 
